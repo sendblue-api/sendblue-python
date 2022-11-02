@@ -1,0 +1,15 @@
+Metadata-Version: 2.1
+Name: sendblue
+Version: 0.0.2
+Summary: A tiny client wrapper for the Sendblue API in Python
+Author: Nikita Jerschow
+Author-email: nikita@sendblue.co
+Keywords: imessage,api,sms,python,sendblue,sendblue python,sendblue api,imessage api,sms api
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Education
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 3
+Classifier: Operating System :: MacOS :: MacOS X
+Classifier: Operating System :: Microsoft :: Windows
+
+Sendblue is a simple and powerful iMessage API. This is a tiny client wrapper for the Sendblue API in Python. With it we can send iMessages, SMS, and MMS, directly from Python.

@@ -1,0 +1,6 @@
+setup.py
+sendblue.egg-info/PKG-INFO
+sendblue.egg-info/SOURCES.txt
+sendblue.egg-info/dependency_links.txt
+sendblue.egg-info/requires.txt
+sendblue.egg-info/top_level.txt
