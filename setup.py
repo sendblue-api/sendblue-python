@@ -1,8 +1,10 @@
 from setuptools import setup, find_packages
 
-VERSION = '0.1.2' 
+readme = open('README.md').read()
+
+VERSION = '0.1.3' 
 DESCRIPTION = 'A tiny client wrapper for the Sendblue API in Python'
-LONG_DESCRIPTION = 'Sendblue is a simple and powerful iMessage API. This is a tiny client wrapper for the Sendblue API in Python. With it we can send iMessages, SMS, and MMS, directly from Python.'
+LONG_DESCRIPTION = readme
 
 # Setting up
 setup(
@@ -13,6 +15,7 @@ setup(
         author_email="nikita@sendblue.co",
         description=DESCRIPTION,
         long_description=LONG_DESCRIPTION,
+        long_description_content_type='text/markdown',
         packages=find_packages(),
         install_requires=["requests"], # add any additional packages that 
         # needs to be installed along with your package. Eg: 'caer'
