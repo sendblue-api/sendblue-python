@@ -42,7 +42,7 @@ response = sendblue.send_message('+19998887777', {
 
 ```python
 response = sendblue.send_group_message({
-    ['+19998887777', '+19998887778'],
+    'numbers': ['+19998887777', '+19998887778'],
     'content': 'Hello from Sendblue!',
     'send_style': 'invisible',
     'media_url': 'https://source.unsplash.com/random.png',
