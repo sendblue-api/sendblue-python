@@ -41,7 +41,7 @@ response = sendblue.send_message('+19998887777', {
 ### Send Group Message API call
 
 ```python
-response = sendblue.send_group_message(['+19998887777', '+19998887778'], {
+response = sendblue.send_group_message({['+19998887777', '+19998887778'],
     'content': 'Hello from Sendblue!',
     'send_style': 'invisible',
     'media_url': 'https://source.unsplash.com/random.png',
