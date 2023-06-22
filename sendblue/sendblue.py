@@ -50,11 +50,10 @@ class Sendblue:
         data.update(opts)
         return self.request('/send-message', 'post', data)
 
-    def send_group_message(self, opts={}):
-        data = {}
-
-        if (opts.get('numbers')):
-            data['numbers'] = opts.get('numbers')
+    def send_group_message(self, numbers, opts={}):
+        data = {
+            'numbers': numbers,
+        }
         if (opts.get('group_id')):
             data['group_id'] = opts.get('group_id')
         if (opts.get('content')):
