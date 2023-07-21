@@ -1,1 +1,1 @@
-from sendblue.sendblue import Sendblue
+from .sendblue import Sendblue
