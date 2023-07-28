@@ -1,16 +1,12 @@
-
-
 import requests
-import json
 
 class Sendblue:
-    def __init__(self, api_key, api_secret, opts={}):
+    def __init__(self, api_key: str, api_secret: str) -> None:
         self.api_key = api_key
         self.api_secret = api_secret
-        self.log_level = opts.get('log_level', 'info')
-        self.base_url = "https://api.sendblue.co/api"
+        self.base_url = 'https://api.sendblue.co/api'
 
-    def request(self, endpoint, method, data={}):
+    def request(self, endpoint: str, data: dict = None) -> dict:
         url = self.base_url + endpoint
         headers = {
             'sb-api-key-id': self.api_key,
@@ -18,53 +14,50 @@ class Sendblue:
             'Content-Type': 'application/json'
         }
 
-        if (self.log_level == 'debug'):
-            print('Sending request to ' + url)
-            print('Headers: ' + json.dumps(headers))
-            print('Data: ' + json.dumps(data))
-
-        if method == 'get':
-            r = requests.get(url, headers=headers)
-        elif method == 'post':
-            r = requests.post(url, headers=headers, data=json.dumps(data))
+        if data:
+            response = requests.post(url, headers=headers, json=data)
         else:
-            raise Exception("Invalid method: " + method)
-        
-        if r.status_code < 200 and r.status_code > 299:
-            raise Exception("Error: " + r.text)
-        return r.json()
+            response = requests.get(url, headers=headers)
 
-    def send_message(self, number, opts={}):
+        if not response.ok:
+            raise Exception("Error: " + response.text)
+
+        return response.json()
+
+    def send_message(self, number: str, content: str, send_style: str = None, media_url: str = None, status_callback: str = None):
         data = {
             'number': number,
+            'content': content,
+            'send_style': send_style,
+            'media_url': media_url,
+            'status_callback': status_callback
         }
-        if (opts.get('content')):
-            data['content'] = opts.get('content')
-        if (opts.get('media_url')):
-            data['media_url'] = opts.get('media_url')
-        if (opts.get('status_callback')):
-            data['status_callback'] = opts.get('status_callback')
-        if (opts.get('send_style')):
-            data['send_style'] = opts.get('send_style')
+        return self.request('/send-message', data)
 
-        data.update(opts)
-        return self.request('/send-message', 'post', data)
+    def send_group_message(self, numbers: list[str], content: str, group_id: str = None, send_style: str = None, media_url: str = None, status_callback: str = None):
+        data = {
+            'numbers': numbers,
+            'group_id': group_id,
+            'content': content,
+            'send_style': send_style,
+            'media_url': media_url,
+            'status_callback': status_callback
+        }
+        return self.request('/send-group-message', data)
 
-    def send_group_message(self, opts={}):
-        data = {}
+    def modify_group(self, group_id: str, modify_type: str, number: str):
+        data = {
+            "group_id": group_id,
+            "modify_type": modify_type,
+            "number": number
+        }
+        return self.request('/modify-group', data)
 
-        if (opts.get('numbers')):
-            data['numbers'] = opts.get('numbers')
-        if (opts.get('group_id')):
-            data['group_id'] = opts.get('group_id')
-        if (opts.get('content')):
-            data['content'] = opts.get('content')
-        if (opts.get('media_url')):
-            data['media_url'] = opts.get('media_url')
-        if (opts.get('status_callback')):
-            data['status_callback'] = opts.get('status_callback')
-        if (opts.get('send_style')):
-            data['send_style'] = opts.get('send_style')
+    def lookup(self, number: str):
+        return self.request(f'/evaluate-service?number={number}')
 
-        data.update(opts)
-        return self.request('/send-group-message', 'post', data)
+    def send_typing_indicator(self, number: str):
+        data = {
+            'number': number
+        }
+        return self.request(f'/send-typing-indicator?number={number}', data)
