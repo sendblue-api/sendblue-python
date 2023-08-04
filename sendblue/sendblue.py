@@ -2,31 +2,13 @@ import requests
 
 class Sendblue:
     def __init__(self, api_key: str, api_secret: str) -> None:
-        self.api_key = api_key
-        self.api_secret = api_secret
         self.base_url = 'https://api.sendblue.co'
-
-    def request(self, endpoint: str, method: str, data: dict = None) -> dict:
-        url = self.base_url + endpoint
-        headers = {
-            'sb-api-key-id': self.api_key,
-            'sb-api-secret-key': self.api_secret,
+        self.session = requests.Session()
+        self.session.headers = {
+            'sb-api-key-id': api_key,
+            'sb-api-secret-key': api_secret,
             'Content-Type': 'application/json'
         }
-
-        if method == 'get':
-            response = requests.get(url, headers=headers, json=data)
-        elif method == 'post':
-            response = requests.post(url, headers=headers, json=data)
-        elif method == 'put':
-            response = requests.put(url, headers=headers, json=data)
-        elif method == 'delete':
-            response = requests.delete(url, headers=headers, json=data)
-
-        if not response.ok:
-            raise Exception("Error: " + response.text)
-
-        return response.json()
 
     def send_message(self, number: str, content: str, send_style: str = None, media_url: str = None, status_callback: str = None):
         data = {
@@ -36,7 +18,12 @@ class Sendblue:
             'media_url': media_url,
             'status_callback': status_callback
         }
-        return self.request('/api/send-message', 'post', data)
+        url = self.base_url + '/api/send-message'
+        response = self.session.post(url, data)
+        if not response.ok:
+            raise Exception("Error: " + response.text)
+        else:
+            return response.json()
 
     def send_group_message(self, numbers: list[str], content: str, group_id: str = None, send_style: str = None, media_url: str = None, status_callback: str = None):
         data = {
@@ -47,7 +34,12 @@ class Sendblue:
             'media_url': media_url,
             'status_callback': status_callback
         }
-        return self.request('/api/send-group-message', 'post', data)
+        url = self.base_url + '/api/send-group-message'
+        response = self.session.post(url, data)
+        if not response.ok:
+            raise Exception("Error: " + response.text)
+        else:
+            return response.json()
 
     def modify_group(self, group_id: str, modify_type: str, number: str):
         data = {
@@ -55,19 +47,39 @@ class Sendblue:
             "modify_type": modify_type,
             "number": number
         }
-        return self.request('/modify-group', 'post', data)
+        url = self.base_url + '/modify-group'
+        response = self.session.post(url, data)
+        if not response.ok:
+            raise Exception("Error: " + response.text)
+        else:
+            return response.json()
 
     def lookup(self, number: str):
-        return self.request(f'/api/evaluate-service?number={number}', 'get')
+        url = self.base_url + f'/api/evaluate-service?number={number}'
+        response = self.session.get(url)
+        if not response.ok:
+            raise Exception("Error: " + response.text)
+        else:
+            return response.json()
 
     def send_typing_indicator(self, number: str):
         data = {
             'number': number
         }
-        return self.request(f'/api/send-typing-indicator?number={number}', 'post', data)
+        url = self.base_url + f'/api/send-typing-indicator?number={number}'
+        response = self.session.post(url, data)
+        if not response.ok:
+            raise Exception("Error: " + response.text)
+        else:
+            return response.json()
     
     def get_contacts(self):
-        return self.request('/accounts/contacts', 'get')
+        url = self.base_url + '/accounts/contacts'
+        response = self.session.get(url)
+        if not response.ok:
+            raise Exception("Error: " + response.text)
+        else:
+            return response.json()
 
     def create_contact(self, number: str, first_name: str = None, last_name: str = None, company_name: str = None):
         data = {
@@ -76,7 +88,17 @@ class Sendblue:
             'last_name': last_name,
             'company_name': company_name
         }
-        return self.request(f'/accounts/contacts', 'post', data)
+        url = self.base_url + '/accounts/contacts'
+        response = self.session.post(url, data)
+        if not response.ok:
+            raise Exception("Error: " + response.text)
+        else:
+            return response.json()
 
     def delete_contact(self, contact_id: str):
-        return self.request(f'/accounts/contacts/{contact_id}')
+        url = self.base_url + '/accounts/contacts/{contact_id}'
+        response = self.session.delete(url)
+        if not response.ok:
+            raise Exception("Error: " + response.text)
+        else:
+            return response.json()
