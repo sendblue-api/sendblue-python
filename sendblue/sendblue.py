@@ -9,6 +9,18 @@ class Sendblue:
             'sb-api-secret-key': api_secret,
             'Content-Type': 'application/json'
         }
+    
+    def request(self, method: str, endpoint: str, data: dict = None):
+        url = self.base_url + endpoint
+        response = self.session.request(method, url, json=data)
+        try:    
+            response.raise_for_status()
+        except requests.exceptions.HTTPError as e:
+            print(e, response.text)
+        return response.json()
+    
+    def get_message(self, message_id: str):
+        return self.request('get', f'/api/message/{message_id}')
 
     def send_message(self, number: str, content: str, send_style: str = None, media_url: str = None, status_callback: str = None):
         data = {
@@ -18,12 +30,7 @@ class Sendblue:
             'media_url': media_url,
             'status_callback': status_callback
         }
-        url = self.base_url + '/api/send-message'
-        response = self.session.post(url, data)
-        if not response.ok:
-            raise Exception("Error: " + response.text)
-        else:
-            return response.json()
+        return self.request('post', '/api/send-message', data)
 
     def send_group_message(self, numbers: list[str], content: str, group_id: str = None, send_style: str = None, media_url: str = None, status_callback: str = None):
         data = {
@@ -34,12 +41,7 @@ class Sendblue:
             'media_url': media_url,
             'status_callback': status_callback
         }
-        url = self.base_url + '/api/send-group-message'
-        response = self.session.post(url, data)
-        if not response.ok:
-            raise Exception("Error: " + response.text)
-        else:
-            return response.json()
+        return self.request('post', '/api/send-group-message', data)
 
     def modify_group(self, group_id: str, modify_type: str, number: str):
         data = {
@@ -47,58 +49,28 @@ class Sendblue:
             "modify_type": modify_type,
             "number": number
         }
-        url = self.base_url + '/modify-group'
-        response = self.session.post(url, data)
-        if not response.ok:
-            raise Exception("Error: " + response.text)
-        else:
-            return response.json()
+        return self.request('post', '/modify-group', data)
 
     def lookup(self, number: str):
-        url = self.base_url + f'/api/evaluate-service?number={number}'
-        response = self.session.get(url)
-        if not response.ok:
-            raise Exception("Error: " + response.text)
-        else:
-            return response.json()
+        return self.request('get', f'/api/evaluate-service?number={number}')
 
     def send_typing_indicator(self, number: str):
         data = {
             'number': number
         }
-        url = self.base_url + f'/api/send-typing-indicator?number={number}'
-        response = self.session.post(url, data)
-        if not response.ok:
-            raise Exception("Error: " + response.text)
-        else:
-            return response.json()
+        return self.request('post', f'/api/send-typing-indicator?number={number}', data)
     
     def get_contacts(self):
-        url = self.base_url + '/accounts/contacts'
-        response = self.session.get(url)
-        if not response.ok:
-            raise Exception("Error: " + response.text)
-        else:
-            return response.json()
+        return self.request('get', '/accounts/contacts')
 
     def create_contact(self, number: str, first_name: str = None, last_name: str = None, company_name: str = None):
         data = {
             'number': number,
-            'first_name': first_name,
-            'last_name': last_name,
-            'company_name': company_name
+            'firstName': first_name,
+            'lastName': last_name,
+            'companyName': company_name
         }
-        url = self.base_url + '/accounts/contacts'
-        response = self.session.post(url, data)
-        if not response.ok:
-            raise Exception("Error: " + response.text)
-        else:
-            return response.json()
+        return self.request('post', '/accounts/contacts', data)
 
     def delete_contact(self, contact_id: str):
-        url = self.base_url + '/accounts/contacts/{contact_id}'
-        response = self.session.delete(url)
-        if not response.ok:
-            raise Exception("Error: " + response.text)
-        else:
-            return response.json()
+        return self.request('delete', f'/accounts/contacts/{contact_id}')
