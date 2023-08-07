@@ -18,9 +18,6 @@ class Sendblue:
         except requests.exceptions.HTTPError as e:
             print(e, response.text)
         return response.json()
-    
-    def get_message(self, message_id: str):
-        return self.request('get', f'/api/message/{message_id}')
 
     def send_message(self, number: str, content: str, send_style: str = None, media_url: str = None, status_callback: str = None):
         data = {
@@ -42,6 +39,9 @@ class Sendblue:
             'status_callback': status_callback
         }
         return self.request('post', '/api/send-group-message', data)
+
+    def get_message(self, message_id: str):
+        return self.request('get', f'/api/message/{message_id}')
 
     def modify_group(self, group_id: str, modify_type: str, number: str):
         data = {

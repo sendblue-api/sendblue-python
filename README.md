@@ -41,6 +41,12 @@ response = sendblue.send_message('+19998887777', 'Hello from Sendblue!', send_st
 response = sendblue.send_group_message(['+19998887777', '+19998887778'], 'Hello from Sendblue!', send_style='invisible', media_url='https://source.unsplash.com/random.png', status_callback='https://example.com/callback')
 ```
 
+### Get Message
+
+```python
+response = sendblue.get_message('message_id')
+```
+
 ### Modify Group
 
 ```python
@@ -57,4 +63,28 @@ response = sendblue.lookup('+19998887777')
 
 ```python
 response = sendblue.send_typing_indicator('+19998887777')
+```
+
+### Get Contacts
+
+```python
+response = sendblue.get_contacts()
+```
+
+### Create Contact
+
+```python
+response = sendblue.create_contact('+19998887777', 'First Name', 'Last Name', 'Company Name')
+```
+
+### Delete Contact
+
+```python
+response = sendblue.delete_contact('contact_id')
+```
+
+### Get Messages
+
+```python
+response = sendblue.get_messages('contact_id')
 ```
