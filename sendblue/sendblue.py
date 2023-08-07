@@ -74,3 +74,6 @@ class Sendblue:
 
     def delete_contact(self, contact_id: str):
         return self.request('delete', f'/accounts/contacts/{contact_id}')
+
+    def get_messages(self, contact_id: str):
+        return self.request('get', f'/accounts/messages?cid={contact_id}')
